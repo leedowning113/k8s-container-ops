@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-ops-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-test-app
+  template:
+    metadata:
+      labels:
+        app: ai-test-app
+    spec:
+      nodeSelector:
+        type: cpu   # AI 노드(type=cpu)로 고정
+      containers:
+        - name: pod-a-ai-cpu
+          image: leedowning113/ai-cpu-test:v2
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "200m"       # 0.2 코어 (최소 보장)
+              memory: "256Mi"
+            limits:
+              cpu: "500m"       # 0.5 코어 (초과 시 Throttling)
+              memory: "512Mi"
+
